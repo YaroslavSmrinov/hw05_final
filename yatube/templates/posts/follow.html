@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Подписки{% endblock %}
+{% block content %}
+  {% include 'posts/includes/switcher.html' %}
+  {% if not page_obj %}
+    <h3> У вас ещё нет подписок :( Не нашлось ничего интересного? </h3>
+    <h5>Вам может понравиться один из них.</h5>
+    {% for author in authors %}
+        <li> {% if author.get_full_name %}
+          <a href="{% url 'posts:profile' author.username %}"> {{ author.get_full_name }}</a>
+          {% else %}
+          <a href="{% url 'posts:profile' author.username %}"> {{ author.username }}</a>
+          {% endif %}
+    {% endfor %}
+  {% endif %}
+  {% for post in page_obj %}
+    {% include 'posts/includes/post_card.html' with profile_page=False not_group_page=True %}
+  {% endfor %}
+  {% include 'posts/includes/paginator.html' %}
+{% endblock content%}
