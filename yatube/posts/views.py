@@ -8,7 +8,7 @@ from .models import Follow, Group, Post, User
 from yatube.settings import POSTS_PER_PAGE
 
 
-def pagination(request, objects):
+def paginate(request, objects):
     paginator = Paginator(objects, POSTS_PER_PAGE)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -18,7 +18,7 @@ def pagination(request, objects):
 @cache_page(20, key_prefix='index_page')
 def index(request):
     post_list = Post.objects.select_related('group', 'author')
-    page_obj = pagination(request, post_list)
+    page_obj = paginate(request, post_list)
     context = {
         'page_obj': page_obj,
     }
@@ -28,7 +28,7 @@ def index(request):
 def group_posts(request, slug):
     group = get_object_or_404(Group, slug=slug)
     post_list = group.posts.select_related('author')
-    page_obj = pagination(request, post_list)
+    page_obj = paginate(request, post_list)
     context = {
         'group': group,
         'page_obj': page_obj,
@@ -39,12 +39,11 @@ def group_posts(request, slug):
 def profile(request, username):
     author = User.objects.get(username=username)
     posts = author.posts.select_related('group')
-    page_obj = pagination(request, posts)
-    following = False
-    if request.user.is_authenticated:
-        following = Follow.objects.filter(
+    page_obj = paginate(request, posts)
+    following = request.user.is_authenticated and Follow.objects.filter(
             user=request.user, author=author
         ).exists
+
     context = {
         'author': author,
         'page_obj': page_obj,
@@ -125,7 +124,7 @@ def follow_index(request):
     )
     authors = User.objects.all()
     context = {
-        'page_obj': pagination(request, post_list),
+        'page_obj': paginate(request, post_list),
         'authors': authors
     }
     return render(request, 'posts/follow.html', context)
@@ -134,14 +133,14 @@ def follow_index(request):
 @login_required
 def profile_follow(request, username):
     author = get_object_or_404(User, username=username)
-    usr = request.user
-    if usr != author and not author.following.filter(user=usr):
-        Follow.objects.create(user=request.user, author=author)
+    user = request.user
+    if user != author and not author.following.filter(user=user):
+        Follow.objects.create(user=user, author=author)
     return redirect('posts:profile', username)
 
 
 @login_required
 def profile_unfollow(request, username):
     author = get_object_or_404(User, username=username)
-    Follow.objects.get(user=request.user, author__username=author).delete()
+    Follow.objects.filter(user=request.user, author__username=author).delete()
     return redirect('posts:profile', username)

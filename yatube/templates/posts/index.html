@@ -4,7 +4,7 @@
 {% endblock title %}
 {% block content%}
   <h1><b>Последние обновления на сайте.</b></h1>
-  {% include 'posts/includes/switcher.html' %}
+  {% include 'posts/includes/switcher.html' with index=True %}
   {% for post in page_obj %}
     {% include 'posts/includes/post_card.html' with profile_page=False not_group_page=True %}
   {% endfor %}

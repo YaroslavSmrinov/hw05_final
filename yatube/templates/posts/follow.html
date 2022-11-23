@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}Подписки{% endblock %}
 {% block content %}
-  {% include 'posts/includes/switcher.html' %}
+  {% include 'posts/includes/switcher.html' with follow=True %}
   {% if not page_obj %}
     <h3> У вас ещё нет подписок :( Не нашлось ничего интересного? </h3>
     <h5>Вам может понравиться один из них.</h5>

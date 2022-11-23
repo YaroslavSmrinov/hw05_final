@@ -60,7 +60,7 @@ class Comment(CreatedModel):
     )
     post = models.ForeignKey(
         Post,
-        verbose_name='Комментарий',
+        verbose_name='Комментируемый пост',
         related_name='comments',
         on_delete=models.CASCADE,
     )
@@ -72,7 +72,7 @@ class Comment(CreatedModel):
     )
 
     def __str__(self):
-        return self.text
+        return self.text[:50]  # Для ревьюера: обрезать таким образом норм?
 
 
 class Follow(CreatedModel):
