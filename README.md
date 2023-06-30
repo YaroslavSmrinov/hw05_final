@@ -1,3 +1,30 @@
-# hw05_final
+# Блог YaTube
+Учебный проект, эмулирующий соц.сеть.
+## Технологии:
++ pytest
++ django 2.2.16
++ Pillow
++ sorl-thumbnail
++ six
 
-[![CI](https://github.com/yandex-praktikum/hw05_final/actions/workflows/python-app.yml/badge.svg?branch=master)](https://github.com/yandex-praktikum/hw05_final/actions/workflows/python-app.yml)
+## Установка
+Клонируйте репозиторий, перейдите в папку, установите окружение командой 
+```
+python -m venv venv
+```
+установите зависимости
+```
+pip install -r requirements.txt
+```
+создайте админа
+```
+python manage.py createsuperuser
+```
+## Функции
+Возможны:
++ Регистрация
++ Вход
++ Создание поста ( с изображением или без)
++ Редактирование поста
++ Отправка комментариев
++ Подписка на автора
